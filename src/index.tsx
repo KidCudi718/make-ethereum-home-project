@@ -247,6 +247,7 @@ function simulateENSCheck(account: string) {
     '0x1234567890123456789012345678901234567890': ['vitalik.allthingscrypto.eth'],
     '0xabcdefabcdefabcdefabcdefabcdefabcdefabcd': ['satoshi.allthingscrypto.eth'],
     '0x0000000000000000000000000000000000000001': ['demo.allthingscrypto.eth'],
+    '0xb55d7219cea2ae54d115f378088a5d4ef1fdacc0': ['brent.allthingscrypto.eth'],
     // Add more test accounts representing your 200+ holders
   }
   
