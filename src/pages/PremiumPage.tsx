@@ -89,6 +89,68 @@ export function PremiumPage() {
 
               {/* Premium Sections */}
               <section style="margin-bottom: var(--space-16);">
+                <h2>🎬 Exclusive Video Content</h2>
+                <div class="card premium-video-section" style="margin-bottom: var(--space-8);">
+                  <div class="premium-video-header" style="margin-bottom: var(--space-6);">
+                    <h3 class="card__title" style="display: flex; align-items: center; gap: var(--space-3);">
+                      <span>🎯</span>
+                      <span>WTF is ENS on Ethereum</span>
+                      <span class="premium-badge" style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2);">Exclusive</span>
+                    </h3>
+                    <p style="color: var(--text-secondary); margin-bottom: var(--space-4);">
+                      Professional podcast-style deep dive with Alex Martinez and Sophia Chen. 
+                      <strong>4 minutes 41 seconds</strong> of pure ENS mastery.
+                    </p>
+                  </div>
+                  
+                  <div class="video-content-wrapper" style="background: var(--bg-primary); border-radius: var(--border-radius); padding: var(--space-6); border: 2px solid var(--ethereum-highlight);">
+                    <div class="video-placeholder" style="background: linear-gradient(135deg, var(--ethereum-highlight), var(--ethereum-accent)); border-radius: var(--border-radius); padding: var(--space-12); text-align: center; color: var(--white); margin-bottom: var(--space-6);">
+                      <div style="font-size: var(--text-4xl); margin-bottom: var(--space-4);">🎬</div>
+                      <h4 style="margin-bottom: var(--space-3); color: var(--white);">Premium Video Content</h4>
+                      <p style="opacity: 0.9; margin-bottom: var(--space-4);">
+                        High-quality podcast explaining ENS from basics to advanced community building
+                      </p>
+                      <button class="btn btn--secondary" style="background: var(--white); color: var(--ethereum-highlight);">
+                        ▶️ Watch Now (4:41)
+                      </button>
+                    </div>
+                    
+                    <div class="video-topics" style="margin-bottom: var(--space-6);">
+                      <h4 style="margin-bottom: var(--space-4);">🎯 Key Topics Covered:</h4>
+                      <div class="grid grid--2" style="gap: var(--space-3);">
+                        <div class="topic-card" style="padding: var(--space-3); background: rgba(108, 99, 255, 0.1); border-radius: var(--border-radius); border-left: 3px solid var(--ethereum-highlight);">
+                          <strong>ENS Basics</strong><br />
+                          <small>Why wallet addresses suck & ENS as Web3 DNS</small>
+                        </div>
+                        <div class="topic-card" style="padding: var(--space-3); background: rgba(195, 153, 107, 0.1); border-radius: var(--border-radius); border-left: 3px solid var(--ethereum-accent);">
+                          <strong>Cross-Chain Magic</strong><br />
+                          <small>100+ cryptocurrencies, one .eth name</small>
+                        </div>
+                        <div class="topic-card" style="padding: var(--space-3); background: rgba(108, 99, 255, 0.1); border-radius: var(--border-radius); border-left: 3px solid var(--ethereum-highlight);">
+                          <strong>NFT Ownership</strong><br />
+                          <small>True ownership vs renting domains</small>
+                        </div>
+                        <div class="topic-card" style="padding: var(--space-3); background: rgba(195, 153, 107, 0.1); border-radius: var(--border-radius); border-left: 3px solid var(--ethereum-accent);">
+                          <strong>Community Building</strong><br />
+                          <small>Subdomains & "burning the fuses"</small>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="video-insights" style="background: var(--bg-secondary); border-radius: var(--border-radius); padding: var(--space-4);">
+                      <h4 style="margin-bottom: var(--space-3);">💡 Premium Insights for allthingscrypto.eth Holders:</h4>
+                      <ul style="margin-left: var(--space-4); color: var(--text-secondary);">
+                        <li>Advanced subdomain strategies used by your community</li>
+                        <li>Token-gating techniques with ENS ownership</li>
+                        <li>"Claim check" security features for high-value assets</li>
+                        <li>Market evolution from speculation to utility</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section style="margin-bottom: var(--space-16);">
                 <h2>🎯 Advanced DeFi Strategies</h2>
                 <div class="grid grid--2">
                   <div class="card">
@@ -145,6 +207,26 @@ export function PremiumPage() {
               </section>
 
               <section style="margin-bottom: var(--space-16);">
+                <h2>💬 Community Discussion</h2>
+                <div class="card community-discussion" style="margin-bottom: var(--space-6); background: linear-gradient(135deg, rgba(108, 99, 255, 0.05), rgba(195, 153, 107, 0.05)); border: 1px solid var(--ethereum-highlight);">
+                  <h3 class="card__title">🎙️ From the Video: Let's Discuss</h3>
+                  <blockquote style="font-style: italic; font-size: var(--text-lg); margin: var(--space-4) 0; color: var(--text-primary);">
+                    "As ENS evolves from speculative assets to essential Web3 infrastructure, 
+                    what new use cases do you think we'll see emerge in the next year?"
+                  </blockquote>
+                  <p style="margin-bottom: var(--space-4); color: var(--text-secondary);">
+                    This question from Alex & Sophia's podcast sparked incredible discussion among our community. 
+                    As <strong>allthingscrypto.eth</strong> holders, you're at the forefront of this evolution.
+                  </p>
+                  <div class="discussion-actions" style="display: flex; gap: var(--space-3); flex-wrap: wrap;">
+                    <button class="btn btn--primary">💬 Join Discussion</button>
+                    <button class="btn btn--outline">📝 Share Your Take</button>
+                    <button class="btn btn--outline">🔥 View Hot Takes</button>
+                  </div>
+                </div>
+              </section>
+
+              <section style="margin-bottom: var(--space-16);">
                 <h2>🤝 Community Hub</h2>
                 <div class="grid grid--2">
                   <div class="card">
@@ -163,6 +245,24 @@ export function PremiumPage() {
                       Next session: Vitalik Buterin on Ethereum's roadmap.
                     </p>
                     <button class="btn btn--primary">Register for AMA →</button>
+                  </div>
+                  
+                  <div class="card">
+                    <h3 class="card__title">ENS Subdomain Tools</h3>
+                    <p class="card__description">
+                      Exclusive tools for allthingscrypto.eth holders: mint new subdomains, 
+                      manage permissions, and build your Web3 community.
+                    </p>
+                    <button class="btn btn--primary">Access Tools →</button>
+                  </div>
+                  
+                  <div class="card">
+                    <h3 class="card__title">Weekly Alpha Report</h3>
+                    <p class="card__description">
+                      Get the insider scoop on ENS developments, new integrations, 
+                      and opportunities before they hit mainstream.
+                    </p>
+                    <button class="btn btn--primary">Read Latest →</button>
                   </div>
                 </div>
               </section>
