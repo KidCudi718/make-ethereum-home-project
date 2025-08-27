@@ -12,8 +12,53 @@ const app = new Hono()
 // Enable CORS
 app.use('/api/*', cors())
 
-// Serve static files
-app.use('/static/*', serveStatic({ root: './public' }))
+// Add security headers including CSP
+app.use('*', async (c, next) => {
+  // Content Security Policy that allows our scripts to run
+  c.header('Content-Security-Policy', [
+    "default-src 'self'",
+    "script-src 'self' 'unsafe-inline'",
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "font-src 'self' https://fonts.gstatic.com",
+    "img-src 'self' data: https:",
+    "connect-src 'self' https:",
+    "frame-src 'none'",
+    "object-src 'none'"
+  ].join('; '))
+  
+  // Other security headers
+  c.header('X-Content-Type-Options', 'nosniff')
+  c.header('X-Frame-Options', 'DENY')
+  c.header('X-XSS-Protection', '1; mode=block')
+  
+  await next()
+})
+
+// Serve static files with proper MIME types
+app.use('/static/*', async (c, next) => {
+  const path = c.req.path
+  const filePath = path.replace('/static/', '')
+  
+  // Set proper MIME types for different file types
+  if (filePath.endsWith('.js')) {
+    console.log('🔧 Serving JavaScript file:', filePath)
+    c.header('Content-Type', 'application/javascript; charset=utf-8')
+    c.header('Cache-Control', 'no-cache, no-store, must-revalidate')
+    c.header('Pragma', 'no-cache')
+    c.header('Expires', '0')
+  } else if (filePath.endsWith('.css')) {
+    c.header('Content-Type', 'text/css; charset=utf-8')
+    c.header('Cache-Control', 'public, max-age=31536000')
+  } else if (filePath.endsWith('.svg')) {
+    c.header('Content-Type', 'image/svg+xml; charset=utf-8')
+    c.header('Cache-Control', 'public, max-age=31536000')
+  } else if (filePath.endsWith('.webmanifest')) {
+    c.header('Content-Type', 'application/manifest+json; charset=utf-8')
+    c.header('Cache-Control', 'public, max-age=31536000')
+  }
+  
+  return serveStatic({ root: './public' })(c, next)
+})
 
 // Use renderer middleware
 app.use(renderer)

@@ -40,6 +40,15 @@ export function Header() {
           <div class="header__controls">
             <div class="wallet-status"></div>
             <button 
+              id="header-connect-wallet"
+              class="btn btn--primary btn--sm"
+              type="button"
+              aria-label="Connect wallet"
+              title="Connect MetaMask wallet"
+            >
+              🔗 Connect
+            </button>
+            <button 
               id="theme-toggle"
               class="theme-toggle" 
               type="button"

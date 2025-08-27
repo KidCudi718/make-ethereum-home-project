@@ -969,41 +969,56 @@ EthereumStory.web3 = {
     console.log('🔗 Web3 system initialized successfully');
   },
 
-  // Connect wallet (MetaMask)
+  // Connect wallet (MetaMask) - Enhanced with trust building
   async connectWallet() {
-    console.log('🔗 Attempting to connect wallet...');
+    console.log('🔗 Starting secure wallet connection...');
     
+    // Step 1: Check MetaMask installation
     if (typeof window.ethereum === 'undefined') {
-      console.log('❌ MetaMask not detected');
-      this.showError('Please install MetaMask to access premium content!');
+      this.showConnectionStep('❌ MetaMask Required', 
+        'Please install MetaMask to access premium content.\n\nMetaMask is a secure, trusted wallet extension used by millions of users.\n\n🔒 We only request:\n• Account address (public)\n• Network information\n• Read-only ENS verification\n\n❌ We NEVER request:\n• Private keys\n• Transaction approval\n• Token transfers');
+      return false;
+    }
+
+    // Step 2: Check if it's MetaMask
+    if (!window.ethereum.isMetaMask) {
+      this.showConnectionStep('❌ MetaMask Required', 
+        'Please use the official MetaMask wallet extension.\n\nOther wallets may not be compatible with our ENS verification system.');
       return false;
     }
 
     try {
-      console.log('📱 Requesting account access...');
+      // Step 3: Show connection progress
+      this.showConnectionStep('🔗 Connecting...', 
+        'Requesting connection to MetaMask...\n\nThis will open a MetaMask popup where you can:\n• Approve the connection\n• See exactly what permissions we request\n• Cancel if you have concerns');
+      
       EthereumStory.state.web3.isLoading = true;
       this.updateUI();
       
-      // Request account access
+      // Step 4: Request account access
+      console.log('📱 Requesting account access...');
       const accounts = await window.ethereum.request({
         method: 'eth_requestAccounts'
       });
       
-      console.log('📋 Received accounts:', accounts);
-      
       if (accounts.length === 0) {
-        throw new Error('No accounts found');
+        this.showConnectionStep('❌ Connection Failed', 
+          'No accounts returned from MetaMask.\n\nPlease:\n• Unlock MetaMask\n• Ensure you have an account created\n• Try connecting again');
+        EthereumStory.state.web3.isLoading = false;
+        this.updateUI();
+        return false;
       }
 
       const account = accounts[0];
-      console.log('✅ Account selected:', account);
+      
+      // Step 5: Show successful connection
+      this.showConnectionStep('✅ Connected Successfully!', 
+        `Wallet connected: ${account.substring(0, 6)}...${account.substring(38)}\n\n🔍 Next step: Verifying your ENS subdomain ownership...\n\nThis is a read-only check - no transactions or approvals needed.`);
       
       EthereumStory.state.web3.account = account;
       EthereumStory.state.web3.isConnected = true;
       
-      console.log('💰 Wallet connected successfully:', account);
-      
-      // Verify ENS ownership
+      // Step 6: Verify ENS ownership
       console.log('🔍 Verifying ENS ownership...');
       await this.verifyENSOwnership(account);
       
@@ -1011,10 +1026,22 @@ EthereumStory.web3 = {
       this.updateUI();
       
       return true;
+      
     } catch (error) {
       console.error('❌ Wallet connection failed:', error);
       EthereumStory.state.web3.isLoading = false;
-      this.showError('Failed to connect wallet: ' + error.message);
+      
+      // Enhanced error messages with trust building
+      let errorMessage = '';
+      if (error.code === 4001) {
+        errorMessage = 'Connection was rejected by user.\n\nThis is completely safe - you can always try again later.\n\n🔒 Your wallet and funds remain completely secure.';
+      } else if (error.code === -32002) {
+        errorMessage = 'MetaMask has a pending connection request.\n\nPlease check your MetaMask extension and either approve or reject the request.\n\nThis prevents duplicate connection attempts.';
+      } else {
+        errorMessage = `Connection failed: ${error.message}\n\nPlease try again or contact support if the issue persists.\n\n🔒 Your wallet security is not affected.`;
+      }
+      
+      this.showConnectionStep('❌ Connection Failed', errorMessage);
       this.updateUI();
       return false;
     }
@@ -1148,11 +1175,11 @@ EthereumStory.web3 = {
       // Uncomment when you have the actual API endpoint:
       // const response = await fetch('/api/check-ens-ownership', {
       //   method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ account })
-      });
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({ account })
+      // });
       
       if (response.ok) {
         const data = await response.json();
@@ -1163,6 +1190,82 @@ EthereumStory.web3 = {
     } catch (error) {
       console.log('Subdomain check failed:', error);
       return [];
+    }
+  },
+
+  // Check if user owns the main domain allthingscrypto.eth
+  async checkMainDomainOwnership(account) {
+    try {
+      console.log('🔍 Checking main domain ownership for:', account);
+      
+      // This would be a direct ENS contract call in production
+      // For now, we'll use a mock check
+      
+      // You can implement this with actual ENS contract calls:
+      // const ensContract = new ethers.Contract(ENS_REGISTRY_ADDRESS, ENS_ABI, provider);
+      // const owner = await ensContract.owner(namehash('allthingscrypto.eth'));
+      // return owner.toLowerCase() === account.toLowerCase();
+      
+      return false; // Mock implementation
+    } catch (error) {
+      console.log('Main domain check failed:', error);
+      return false;
+    }
+  },
+
+  // Check for specific known subdomains (including brand.allthingscrypto.eth)
+  async checkKnownSubdomains(account) {
+    try {
+      console.log('🔍 Checking known subdomains for:', account);
+      
+      // This is where you'd check against your actual ENS subdomain database
+      // For now, we'll implement a mock check that recognizes brand.allthingscrypto.eth
+      
+      // In production, you'd have an API endpoint that checks your ENS database
+      // const response = await fetch('/api/check-known-subdomains', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ account })
+      // });
+      
+      // Mock implementation - replace with actual API call
+      const mockSubdomains = [
+        {
+          account: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6',
+          ensName: 'brand.allthingscrypto.eth',
+          accessLevel: 'premium'
+        },
+        {
+          account: '0x1234567890123456789012345678901234567890',
+          ensName: 'founder.allthingscrypto.eth',
+          accessLevel: 'founder'
+        },
+        {
+          account: '0xb55d7219cea2ae54d115f378088a5d4ef1fdacc0',
+          ensName: 'brent.allthingscrypto.eth',
+          accessLevel: 'premium'
+        }
+        // Add more known subdomains here
+      ];
+      
+      const found = mockSubdomains.find(sub => 
+        sub.account.toLowerCase() === account.toLowerCase()
+      );
+      
+      if (found) {
+        console.log('✅ Known subdomain found:', found.ensName);
+        return {
+          hasAccess: true,
+          ensName: found.ensName,
+          accessLevel: found.accessLevel
+        };
+      }
+      
+      return { hasAccess: false, ensName: null, accessLevel: null };
+      
+    } catch (error) {
+      console.log('Known subdomain check failed:', error);
+      return { hasAccess: false, ensName: null, accessLevel: null };
     }
   },
 
@@ -1312,14 +1415,14 @@ EthereumStory.web3 = {
             <p style="opacity: 0.8; margin-bottom: var(--space-4);">
               Exclusive 4:41 podcast with Alex Martinez & Sophia Chen
             </p>
-            <div style="display: flex; gap: var(--space-3); justify-content: center;">
-              <button class="btn btn--primary" onclick="EthereumStory.web3.playVideo()">
-                ▶️ Play Video
-              </button>
-              <button class="btn btn--outline" style="color: var(--white); border-color: rgba(255,255,255,0.3);">
-                📝 Show Transcript
-              </button>
-            </div>
+                         <div style="display: flex; gap: var(--space-3); justify-content: center;">
+               <button class="btn btn--primary play-video-btn">
+                 ▶️ Play Video
+               </button>
+               <button class="btn btn--outline" style="color: var(--white); border-color: rgba(255,255,255,0.3);">
+                 📝 Show Transcript
+               </button>
+             </div>
             <div style="margin-top: var(--space-4); font-size: var(--text-sm); opacity: 0.7;">
               🔒 Only available to verified allthingscrypto.eth holders
             </div>
@@ -1331,6 +1434,16 @@ EthereumStory.web3 = {
       const videoPlaceholder = videoWrapper.querySelector('.video-placeholder');
       if (videoPlaceholder) {
         videoPlaceholder.outerHTML = videoPlayerHTML;
+      }
+      
+      // Add event listener to play video button
+      const playVideoBtn = videoWrapper.querySelector('.play-video-btn');
+      if (playVideoBtn) {
+        playVideoBtn.addEventListener('click', () => {
+          if (EthereumStory.web3 && EthereumStory.web3.playVideo) {
+            EthereumStory.web3.playVideo();
+          }
+        });
       }
       
       // Show success message
@@ -1374,6 +1487,70 @@ EthereumStory.web3 = {
     }
   },
 
+  // Enhanced premium access check with clear user feedback
+  async checkPremiumAccess() {
+    console.log('🔍 Checking premium access...');
+    
+    if (!EthereumStory.state.web3.isConnected) {
+      this.showConnectionStep('🔗 Wallet Required', 
+        'Please connect your wallet first to check premium access.\n\nWe only need to verify if you own an allthingscrypto.eth ENS subdomain.');
+      return;
+    }
+    
+    // Show loading state with animation
+    this.showConnectionStep('🔍 Checking Access...', 
+      'Verifying your ENS subdomain ownership...\n\nThis is a read-only check - we never ask for transaction approval.\n\n⏳ Please wait while we verify your access...');
+    
+    // Add loading animation to the modal
+    const modal = document.getElementById('connection-step-modal');
+    if (modal) {
+      const message = modal.querySelector('.connection-step-message');
+      if (message) {
+        message.innerHTML = `
+          <div class="loading-animation">
+            <div class="spinner"></div>
+            <div class="loading-text">
+              Verifying your ENS subdomain ownership...<br><br>
+              This is a read-only check - we never ask for transaction approval.<br><br>
+              ⏳ Please wait while we verify your access...
+            </div>
+          </div>
+        `;
+      }
+    }
+    
+    try {
+      // Simulate a small delay to show the loading state
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      const accessResult = await this.checkENSSubdomains(EthereumStory.state.web3.account);
+      
+      if (accessResult.hasAccess) {
+        this.showConnectionStep('🎉 Access Granted!', 
+          `Welcome ${accessResult.ensName} holder!\n\nYou now have access to:\n• Premium video content\n• Exclusive podcasts\n• Advanced tutorials\n• Community features`);
+        
+        // Update UI to show premium content
+        this.unlockPremiumContent();
+        
+        // Show success toast
+        this.showSuccess(`🎉 Premium access unlocked! Welcome ${accessResult.ensName} holder!`);
+        
+      } else {
+        this.showConnectionStep('🔒 Access Denied', 
+          'Sorry, premium access requires ownership of an allthingscrypto.eth ENS subdomain.\n\nTo get access:\n1. Visit ens.domains\n2. Search for available subdomains\n3. Purchase one (usually $5-20/year)\n4. Connect your wallet here');
+        
+        // Show error toast
+        this.showError('Access denied - ENS subdomain required');
+      }
+      
+    } catch (error) {
+      console.error('❌ Error checking premium access:', error);
+      this.showConnectionStep('❌ Error', 
+        'Failed to verify access. Please try again or contact support.');
+      this.showError('Failed to check access: ' + error.message);
+    }
+  },
+
   // Show success message
   showSuccessMessage(message) {
     const toast = document.createElement('div');
@@ -1382,9 +1559,17 @@ EthereumStory.web3 = {
       <div class="web3-toast__content" style="background: var(--success); color: var(--white);">
         <span class="web3-toast__icon">✅</span>
         <span class="web3-toast__message">${message}</span>
-        <button class="web3-toast__close" onclick="this.parentElement.parentElement.remove()">×</button>
+        <button class="web3-toast__close">×</button>
       </div>
     `;
+    
+    // Add event listener to close button
+    const closeBtn = toast.querySelector('.web3-toast__close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        toast.remove();
+      });
+    }
     
     document.body.appendChild(toast);
     
@@ -1432,9 +1617,19 @@ EthereumStory.web3 = {
           <div style="font-size: var(--text-2xl); margin-bottom: var(--space-4);">🔒</div>
           <div style="font-weight: 600; margin-bottom: var(--space-3);">Premium Access Required</div>
           <div style="color: var(--text-secondary); margin-bottom: var(--space-4);">Connect your allthingscrypto.eth wallet to unlock exclusive content</div>
-          <button class="btn btn--primary btn-connect-wallet" onclick="EthereumStory.web3.connectWallet()">Connect Wallet</button>
+          <button class="btn btn--primary btn-connect-wallet">Connect Wallet</button>
         </div>
       `;
+      
+      // Add event listener to the connect wallet button
+      const connectBtn = el.querySelector('.btn-connect-wallet');
+      if (connectBtn) {
+        connectBtn.addEventListener('click', () => {
+          if (EthereumStory.web3 && EthereumStory.web3.connectWallet) {
+            EthereumStory.web3.connectWallet();
+          }
+        });
+      }
     });
     
     console.log('🔒 Premium content locked');
@@ -1470,9 +1665,17 @@ EthereumStory.web3 = {
       <div class="web3-toast__content">
         <span class="web3-toast__icon">⚠️</span>
         <span class="web3-toast__message">${message}</span>
-        <button class="web3-toast__close" onclick="this.parentElement.parentElement.remove()">×</button>
+        <button class="web3-toast__close">×</button>
       </div>
     `;
+    
+    // Add event listener to close button
+    const closeBtn = toast.querySelector('.web3-toast__close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        toast.remove();
+      });
+    }
     
     document.body.appendChild(toast);
     
@@ -1487,6 +1690,7 @@ EthereumStory.web3 = {
   // Update UI based on Web3 state
   updateUI() {
     const connectButton = document.getElementById('connect-wallet-btn');
+    const headerConnectButton = document.getElementById('header-connect-wallet');
     const walletStatus = document.querySelector('.wallet-status');
     
     if (connectButton) {
@@ -1504,6 +1708,21 @@ EthereumStory.web3 = {
       }
     }
     
+    if (headerConnectButton) {
+      if (EthereumStory.state.web3.isLoading) {
+        headerConnectButton.textContent = '🔗 Connecting...';
+        headerConnectButton.disabled = true;
+      } else if (EthereumStory.state.web3.isConnected) {
+        headerConnectButton.textContent = '✅ Connected';
+        headerConnectButton.disabled = true;
+        headerConnectButton.classList.add('btn--success');
+      } else {
+        headerConnectButton.textContent = '🔗 Connect';
+        headerConnectButton.disabled = false;
+        headerConnectButton.classList.remove('btn--success');
+      }
+    }
+    
     if (walletStatus) {
       if (EthereumStory.state.web3.isConnected) {
         const shortAddress = EthereumStory.state.web3.account.slice(0, 6) + '...' + 
@@ -1517,9 +1736,19 @@ EthereumStory.web3 = {
               '<span class="wallet-info__badge">💎 Premium</span>' : 
               '<span class="wallet-info__badge">🔒 Standard</span>'
             }
-            <button class="wallet-info__disconnect" onclick="EthereumStory.web3.disconnect()">Disconnect</button>
+            <button class="wallet-info__disconnect">Disconnect</button>
           </div>
         `;
+        
+        // Add event listener to disconnect button
+        const disconnectBtn = walletStatus.querySelector('.wallet-info__disconnect');
+        if (disconnectBtn) {
+          disconnectBtn.addEventListener('click', () => {
+            if (EthereumStory.web3 && EthereumStory.web3.disconnect) {
+              EthereumStory.web3.disconnect();
+            }
+          });
+        }
       } else {
         walletStatus.innerHTML = '';
       }
@@ -1537,9 +1766,17 @@ EthereumStory.web3 = {
       <div class="web3-toast__content">
         <span class="web3-toast__icon">❌</span>
         <span class="web3-toast__message">${message}</span>
-        <button class="web3-toast__close" onclick="this.parentElement.parentElement.remove()">×</button>
+        <button class="web3-toast__close">×</button>
       </div>
     `;
+    
+    // Add event listener to close button
+    const closeBtn = toast.querySelector('.web3-toast__close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        toast.remove();
+      });
+    }
     
     document.body.appendChild(toast);
     
@@ -1562,9 +1799,17 @@ EthereumStory.web3 = {
       <div class="web3-toast__content">
         <span class="web3-toast__icon">✅</span>
         <span class="web3-toast__message">${message}</span>
-        <button class="web3-toast__close" onclick="this.parentElement.parentElement.remove()">×</button>
+        <button class="web3-toast__close">×</button>
       </div>
     `;
+    
+    // Add event listener to close button
+    const closeBtn = toast.querySelector('.web3-toast__close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        toast.remove();
+      });
+    }
     
     document.body.appendChild(toast);
     
@@ -1574,6 +1819,53 @@ EthereumStory.web3 = {
         toast.remove();
       }
     }, 5000);
+  },
+
+  // Show connection step with clear explanation
+  showConnectionStep(title, message) {
+    console.log(`📋 ${title}:`, message);
+    
+    // Create or update connection step modal
+    let modal = document.getElementById('connection-step-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'connection-step-modal';
+      modal.className = 'connection-step-modal';
+      modal.innerHTML = `
+        <div class="connection-step-content">
+          <div class="connection-step-header">
+            <h3>${title}</h3>
+            <button class="connection-step-close">×</button>
+          </div>
+          <div class="connection-step-message">
+            ${message.replace(/\n/g, '<br>')}
+          </div>
+        </div>
+      `;
+      
+      // Add close button functionality
+      const closeBtn = modal.querySelector('.connection-step-close');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+          modal.remove();
+        });
+      }
+      
+      document.body.appendChild(modal);
+    } else {
+      // Update existing modal
+      modal.querySelector('h3').textContent = title;
+      modal.querySelector('.connection-step-message').innerHTML = message.replace(/\n/g, '<br>');
+    }
+    
+    // Auto-close after 8 seconds for success/error messages
+    if (title.includes('✅') || title.includes('❌') || title.includes('🔒')) {
+      setTimeout(() => {
+        if (modal.parentElement) {
+          modal.remove();
+        }
+      }, 8000);
+    }
   }
 };
 
@@ -1730,36 +2022,131 @@ EthereumStory.init();
 
 // Initialize wallet connection buttons
 EthereumStory.initializeWalletButtons = function() {
+  console.log('🔗 Initializing wallet connection buttons...');
+  
   const heroConnectBtn = document.getElementById('hero-connect-wallet');
   const premiumConnectBtn = document.getElementById('premium-connect-wallet');
+  const connectWalletBtn = document.getElementById('connect-wallet-btn');
+  const headerConnectBtn = document.getElementById('header-connect-wallet');
+  
+  console.log('🔍 Hero connect button found:', !!heroConnectBtn);
+  console.log('🔍 Premium connect button found:', !!premiumConnectBtn);
+  console.log('🔍 Connect wallet button found:', !!connectWalletBtn);
+  console.log('🔍 Header connect button found:', !!headerConnectBtn);
   
   if (heroConnectBtn) {
-    heroConnectBtn.addEventListener('click', () => {
-      if (EthereumStory.web3 && EthereumStory.web3.connectWallet) {
-        EthereumStory.web3.connectWallet();
+    console.log('✅ Adding click listener to hero button');
+    heroConnectBtn.addEventListener('click', async (e) => {
+      console.log('🖱️ Hero button clicked!');
+      e.preventDefault();
+      if (EthereumStory.web3) {
+        if (!EthereumStory.state.web3.isConnected) {
+          console.log('🚀 Connecting wallet first...');
+          await EthereumStory.web3.connectWallet();
+        } else {
+          console.log('🔍 Checking premium access...');
+          await EthereumStory.web3.checkPremiumAccess();
+        }
       } else {
-        console.log('Web3 system not ready yet');
+        console.log('❌ Web3 system not ready yet');
       }
     });
+    
+    // Add a visual indicator that the button is working
+    heroConnectBtn.style.cursor = 'pointer';
+    heroConnectBtn.title = 'Click to check premium access or connect wallet';
   }
   
   if (premiumConnectBtn) {
-    premiumConnectBtn.addEventListener('click', () => {
-      if (EthereumStory.web3 && EthereumStory.web3.connectWallet) {
-        EthereumStory.web3.connectWallet();
+    console.log('✅ Adding click listener to premium button');
+    premiumConnectBtn.addEventListener('click', async (e) => {
+      console.log('🖱️ Premium button clicked!');
+      e.preventDefault();
+      if (EthereumStory.web3) {
+        if (!EthereumStory.state.web3.isConnected) {
+          console.log('🚀 Connecting wallet first...');
+          await EthereumStory.web3.connectWallet();
+        } else {
+          console.log('🔍 Checking premium access...');
+          await EthereumStory.web3.checkPremiumAccess();
+        }
       } else {
-        console.log('Web3 system not ready yet');
+        console.log('❌ Web3 system not ready yet');
       }
     });
+    
+    // Add a visual indicator that the button is working
+    premiumConnectBtn.style.cursor = 'pointer';
+    premiumConnectBtn.title = 'Click to check premium access or connect wallet';
   }
   
-  console.log('🔗 Wallet connection buttons initialized');
+  if (connectWalletBtn) {
+    console.log('✅ Adding click listener to connect wallet button');
+    connectWalletBtn.addEventListener('click', (e) => {
+      console.log('🖱️ Connect wallet button clicked!');
+      e.preventDefault();
+      if (EthereumStory.web3 && EthereumStory.web3.connectWallet) {
+        console.log('🚀 Calling connectWallet from connect wallet button');
+        EthereumStory.web3.connectWallet();
+      } else {
+        console.log('❌ Web3 system not ready yet');
+      }
+    });
+    
+    // Add a visual indicator that the button is working
+    connectWalletBtn.style.cursor = 'pointer';
+    connectWalletBtn.title = 'Click to connect MetaMask wallet';
+  }
+
+  // Add check access button functionality
+  const checkAccessBtn = document.getElementById('check-access-btn');
+  if (checkAccessBtn) {
+    console.log('✅ Adding click listener to check access button');
+    checkAccessBtn.addEventListener('click', async (e) => {
+      console.log('🔍 Check access button clicked!');
+      e.preventDefault();
+      if (EthereumStory.web3 && EthereumStory.web3.checkPremiumAccess) {
+        console.log('🚀 Calling checkPremiumAccess');
+        await EthereumStory.web3.checkPremiumAccess();
+      } else {
+        console.log('❌ Web3 system not ready yet');
+      }
+    });
+    
+    // Add a visual indicator that the button is working
+    checkAccessBtn.style.cursor = 'pointer';
+    checkAccessBtn.title = 'Click to check your premium access status';
+  }
+  
+  if (headerConnectBtn) {
+    console.log('✅ Adding click listener to header connect button');
+    headerConnectBtn.addEventListener('click', (e) => {
+      console.log('🖱️ Header connect button clicked!');
+      e.preventDefault();
+      if (EthereumStory.web3 && EthereumStory.web3.connectWallet) {
+        console.log('🚀 Calling connectWallet from header button');
+        EthereumStory.web3.connectWallet();
+      } else {
+        console.log('❌ Web3 system not ready yet');
+      }
+    });
+    
+    // Add a visual indicator that the button is working
+    headerConnectBtn.style.cursor = 'pointer';
+    headerConnectBtn.title = 'Click to connect MetaMask wallet';
+  }
+  
+  console.log('🔗 Wallet connection buttons initialized successfully');
 };
 
-// Initialize wallet buttons after a short delay to ensure DOM is ready
-setTimeout(() => {
+// Initialize wallet buttons after DOM is fully ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    EthereumStory.initializeWalletButtons();
+  });
+} else {
   EthereumStory.initializeWalletButtons();
-}, 100);
+}
 
 // Expose to global scope for debugging
 window.EthereumStory = EthereumStory;

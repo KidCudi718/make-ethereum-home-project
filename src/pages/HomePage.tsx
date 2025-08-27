@@ -24,7 +24,7 @@ export function HomePage() {
                 What You'll Learn
               </a>
               <button id="hero-connect-wallet" class="btn btn--outline btn--lg">
-                💎 Access Premium
+                🔗 Connect & Check Access
               </button>
             </div>
           </div>

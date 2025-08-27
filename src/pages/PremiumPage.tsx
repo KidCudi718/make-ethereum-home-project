@@ -63,8 +63,12 @@ export function PremiumPage() {
                     </div>
                   </div>
                   
-                  <button id="connect-wallet-btn" class="btn btn--primary btn--lg" onclick="EthereumStory.web3.connectWallet()">
+                  <button id="connect-wallet-btn" class="btn btn--primary btn--lg">
                     Connect Wallet to Access
+                  </button>
+                  
+                  <button id="check-access-btn" class="btn btn--secondary btn--lg" style="margin-left: var(--space-3);">
+                    🔍 Check My Access
                   </button>
                   
                   <p style="margin-top: var(--space-4); font-size: var(--text-sm); color: var(--text-muted);">
