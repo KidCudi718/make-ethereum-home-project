@@ -1454,6 +1454,17 @@ tr:hover {
   gap: var(--space-3);
 }
 
+.web3-toast--success .web3-toast__content {
+  background: var(--success);
+  color: var(--white);
+  padding: var(--space-4);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-xl);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
 .web3-toast__icon {
   font-size: var(--text-lg);
 }
