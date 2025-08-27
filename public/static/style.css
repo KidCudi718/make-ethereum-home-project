@@ -1716,6 +1716,44 @@ tr:hover {
   100% { width: 100%; }
 }
 
+@keyframes audioGlow {
+  0% {
+    box-shadow: 
+      0 20px 60px rgba(195, 153, 107, 0.2),
+      0 8px 30px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    border-color: rgba(195, 153, 107, 0.3);
+  }
+  100% {
+    box-shadow: 
+      0 25px 70px rgba(195, 153, 107, 0.3),
+      0 12px 40px rgba(108, 99, 255, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    border-color: rgba(195, 153, 107, 0.5);
+  }
+}
+
+/* Enhanced Audio Player Styling */
+audio {
+  filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.3));
+  transition: all 0.3s ease;
+}
+
+audio:hover {
+  filter: drop-shadow(0 6px 20px rgba(195, 153, 107, 0.4));
+  transform: scale(1.02);
+}
+
+.hero-audio-section {
+  position: relative;
+  z-index: 2;
+}
+
+.audio-feature-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 /* =============================================================================
    Theme Toggle & Header Controls
    ============================================================================= */
