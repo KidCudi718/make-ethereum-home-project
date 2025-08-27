@@ -56,7 +56,7 @@ export function HomePage() {
                       margin-bottom: var(--space-4);
                     "
                   >
-                    <source src="/daves-web3-education-revolution.mp3" type="audio/mpeg" />
+                    <source src="/static/daves-web3-education-revolution.mp3" type="audio/mpeg" />
                     Your browser does not support the audio element.
                   </audio>
                   
