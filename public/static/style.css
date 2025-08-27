@@ -1,41 +1,55 @@
-/* The Complete Ethereum Story - Comprehensive Design System */
+/* The Complete Ethereum Story - Professional Design System */
 
 /* =============================================================================
-   CSS Custom Properties (Design Tokens)
+   CSS Custom Properties (Official Ethereum Brand Colors)
    ============================================================================= */
 :root {
-  /* Ethereum Brand Colors */
-  --ethereum-primary: #627eea;
-  --ethereum-secondary: #454a75;
-  --ethereum-accent: #ffd700;
-  --ethereum-success: #00d4aa;
-  --ethereum-warning: #f39c12;
-  --ethereum-danger: #e74c3c;
+  /* Official Ethereum Brand Colors */
+  --ethereum-black: #12100B;           /* Primary Ethereum black */
+  --ethereum-dark-gray: #3D3E3F;      /* Wordmark gray */
+  --ethereum-gold: #C3996B;           /* Powered by Ethereum gold */
+  
+  /* Ethereum Logo Opacity Variations (based on #12100B) */
+  --ethereum-center: rgba(18, 16, 11, 0.60);   /* 60% opacity center */
+  --ethereum-right: rgba(18, 16, 11, 0.80);    /* 80% opacity right triangles */
+  --ethereum-left: rgba(18, 16, 11, 0.45);     /* 45% opacity left triangles */
+  
+  /* Extended Ethereum Palette */
+  --ethereum-primary: #12100B;        /* Main brand color */
+  --ethereum-secondary: #3D3E3F;      /* Secondary gray */
+  --ethereum-accent: #C3996B;         /* Gold accent */
+  --ethereum-highlight: #6C63FF;      /* Modern purple for CTAs */
+  
+  /* Semantic Colors */
+  --success: #00D395;                  /* Blockchain green */
+  --warning: #F7931A;                  /* Bitcoin orange for warnings */
+  --danger: #E53E3E;                   /* Error red */
+  --info: #3182CE;                     /* Info blue */
 
-  /* Neutral Colors */
-  --white: #ffffff;
-  --gray-50: #f9fafb;
-  --gray-100: #f3f4f6;
-  --gray-200: #e5e7eb;
-  --gray-300: #d1d5db;
-  --gray-400: #9ca3af;
-  --gray-500: #6b7280;
-  --gray-600: #4b5563;
-  --gray-700: #374151;
-  --gray-800: #1f2937;
-  --gray-900: #111827;
+  /* Neutral Grays (Professional Scale) */
+  --white: #FFFFFF;
+  --gray-50: #FAFAFA;
+  --gray-100: #F5F5F5;
+  --gray-200: #E5E5E5;
+  --gray-300: #D4D4D4;
+  --gray-400: #A3A3A3;
+  --gray-500: #737373;
+  --gray-600: #525252;
+  --gray-700: #404040;
+  --gray-800: #262626;
+  --gray-900: #171717;
 
-  /* Dark Theme Colors */
-  --dark-bg: #0a0e1a;
-  --dark-surface: #1a1f35;
-  --dark-border: #2a3441;
-  --dark-text: #e2e8f0;
-  --dark-muted: #94a3b8;
+  /* Dark Theme Colors (Ethereum Inspired) */
+  --dark-bg: #0A0A0A;                  /* Near black background */
+  --dark-surface: #1A1A1A;             /* Card/surface color */
+  --dark-border: #2D2D2D;              /* Border color */
+  --dark-text: #F5F5F5;               /* Primary text */
+  --dark-text-muted: #A3A3A3;         /* Secondary text */
 
-  /* Typography Scale */
-  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+  /* Typography Scale (Professional Ethereum-inspired) */
+  --font-display: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
 
   /* Font Sizes (Fluid Typography) */
   --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
@@ -48,19 +62,20 @@
   --text-4xl: clamp(2.25rem, 1.9rem + 1.75vw, 3rem);
   --text-5xl: clamp(3rem, 2.5rem + 2.5vw, 4rem);
 
-  /* Spacing Scale */
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.25rem;
-  --space-6: 1.5rem;
-  --space-8: 2rem;
-  --space-10: 2.5rem;
-  --space-12: 3rem;
-  --space-16: 4rem;
-  --space-20: 5rem;
-  --space-24: 6rem;
+  /* Spacing Scale (Geometric Progression) */
+  --space-1: 0.25rem;    /* 4px */
+  --space-2: 0.5rem;     /* 8px */
+  --space-3: 0.75rem;    /* 12px */
+  --space-4: 1rem;       /* 16px */
+  --space-5: 1.25rem;    /* 20px */
+  --space-6: 1.5rem;     /* 24px */
+  --space-8: 2rem;       /* 32px */
+  --space-10: 2.5rem;    /* 40px */
+  --space-12: 3rem;      /* 48px */
+  --space-16: 4rem;      /* 64px */
+  --space-20: 5rem;      /* 80px */
+  --space-24: 6rem;      /* 96px */
+  --space-32: 8rem;      /* 128px */
 
   /* Layout & Sizing */
   --container-max: 1200px;
@@ -70,11 +85,13 @@
   --border-radius-lg: 12px;
   --border-width: 1px;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  /* Shadows (Ethereum-inspired with depth) */
+  --shadow-sm: 0 1px 2px 0 rgba(18, 16, 11, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(18, 16, 11, 0.1), 0 2px 4px -2px rgba(18, 16, 11, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(18, 16, 11, 0.1), 0 4px 6px -4px rgba(18, 16, 11, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(18, 16, 11, 0.15), 0 8px 10px -6px rgba(18, 16, 11, 0.1);
+  --shadow-inner: inset 0 2px 4px 0 rgba(18, 16, 11, 0.1);
+  --shadow-glow: 0 0 20px rgba(108, 99, 255, 0.3);  /* Purple glow for special elements */
 
   /* Animations */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -90,22 +107,29 @@
   --z-tooltip: 1070;
 }
 
-/* Dark Theme Override */
-[data-theme="dark"] {
-  --bg-primary: var(--dark-bg);
-  --bg-secondary: var(--dark-surface);
-  --text-primary: var(--dark-text);
-  --text-secondary: var(--dark-muted);
-  --border-color: var(--dark-border);
-}
-
-/* Light Theme Default */
+/* Light Theme (Default) - Clean & Professional */
+:root,
 [data-theme="light"] {
   --bg-primary: var(--white);
   --bg-secondary: var(--gray-50);
-  --text-primary: var(--gray-900);
-  --text-secondary: var(--gray-600);
+  --bg-tertiary: var(--gray-100);
+  --text-primary: var(--ethereum-black);
+  --text-secondary: var(--ethereum-dark-gray);
+  --text-muted: var(--gray-500);
   --border-color: var(--gray-200);
+  --border-color-hover: var(--ethereum-accent);
+}
+
+/* Dark Theme Override - Ethereum Dark Mode */
+[data-theme="dark"] {
+  --bg-primary: var(--dark-bg);
+  --bg-secondary: var(--dark-surface);
+  --bg-tertiary: var(--gray-800);
+  --text-primary: var(--dark-text);
+  --text-secondary: var(--dark-text-muted);
+  --text-muted: var(--gray-400);
+  --border-color: var(--dark-border);
+  --border-color-hover: var(--ethereum-gold);
 }
 
 /* =============================================================================
@@ -224,12 +248,15 @@ blockquote {
 }
 
 .section--hero {
-  padding: var(--space-24) 0;
-  background: linear-gradient(135deg, var(--ethereum-primary) 0%, var(--ethereum-secondary) 100%);
+  padding: var(--space-32) 0;
+  background: linear-gradient(135deg, var(--ethereum-black) 0%, var(--ethereum-dark-gray) 50%, var(--ethereum-black) 100%);
   color: var(--white);
   text-align: center;
   position: relative;
   overflow: hidden;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
 }
 
 .section--hero::before {
@@ -240,9 +267,33 @@ blockquote {
   right: 0;
   bottom: 0;
   background: 
-    radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+    radial-gradient(circle at 20% 30%, rgba(195, 153, 107, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(108, 99, 255, 0.1) 0%, transparent 50%),
+    conic-gradient(from 45deg at 50% 50%, 
+      transparent 0deg, 
+      rgba(195, 153, 107, 0.05) 90deg, 
+      transparent 180deg, 
+      rgba(108, 99, 255, 0.05) 270deg, 
+      transparent 360deg
+    );
   pointer-events: none;
+}
+
+.section--hero::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+  background: 
+    linear-gradient(45deg, transparent 30%, rgba(195, 153, 107, 0.1) 50%, transparent 70%),
+    linear-gradient(-45deg, transparent 30%, rgba(108, 99, 255, 0.1) 50%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(40px);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .section--hero * {
@@ -257,11 +308,16 @@ blockquote {
   position: sticky;
   top: 0;
   z-index: var(--z-sticky);
-  background-color: var(--bg-primary);
+  background-color: rgba(255, 255, 255, 0.95);
   border-bottom: var(--border-width) solid var(--border-color);
   height: var(--header-height);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  transition: all var(--transition-fast);
+}
+
+[data-theme="dark"] .header {
+  background-color: rgba(10, 10, 10, 0.95);
 }
 
 .header__content {
@@ -283,15 +339,23 @@ blockquote {
 }
 
 .header__logo {
-  width: 32px;
-  height: 32px;
-  background: linear-gradient(135deg, var(--ethereum-primary), var(--ethereum-secondary));
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--ethereum-highlight) 0%, var(--ethereum-accent) 100%);
   border-radius: var(--border-radius);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--white);
   font-weight: 700;
+  font-size: 18px;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+}
+
+.header__logo:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-md);
 }
 
 .header__nav {
@@ -324,8 +388,8 @@ blockquote {
 .nav-menu__link:hover,
 .nav-menu__link:focus,
 .nav-menu__link--active {
-  color: var(--ethereum-primary);
-  background-color: var(--bg-secondary);
+  color: var(--ethereum-highlight);
+  background-color: rgba(108, 99, 255, 0.1);
 }
 
 .header__controls {
@@ -352,8 +416,9 @@ blockquote {
 .theme-toggle:hover,
 .theme-toggle:focus {
   background-color: var(--bg-secondary);
-  color: var(--ethereum-primary);
-  border-color: var(--ethereum-primary);
+  color: var(--ethereum-highlight);
+  border-color: var(--ethereum-highlight);
+  box-shadow: var(--shadow-sm);
 }
 
 .mobile-menu-toggle {
@@ -411,21 +476,30 @@ blockquote {
    ============================================================================= */
 .hero__title {
   font-size: var(--text-5xl);
-  font-weight: 800;
+  font-weight: 700;
   margin-bottom: var(--space-6);
-  background: linear-gradient(135deg, var(--white) 0%, rgba(255, 255, 255, 0.8) 100%);
+  background: linear-gradient(135deg, 
+    var(--white) 0%, 
+    var(--ethereum-accent) 50%, 
+    var(--white) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
 }
 
 .hero__subtitle {
   font-size: var(--text-xl);
-  margin-bottom: var(--space-8);
-  opacity: 0.9;
-  max-width: 600px;
+  margin-bottom: var(--space-10);
+  opacity: 0.95;
+  max-width: 700px;
   margin-left: auto;
   margin-right: auto;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 400;
 }
 
 .hero__actions {
@@ -455,42 +529,52 @@ blockquote {
 }
 
 .btn--primary {
-  background-color: var(--ethereum-accent);
-  color: var(--gray-900);
-  border-color: var(--ethereum-accent);
+  background: linear-gradient(135deg, var(--ethereum-highlight) 0%, #5A52E8 100%);
+  color: var(--white);
+  border-color: var(--ethereum-highlight);
+  font-weight: 600;
+  box-shadow: var(--shadow-md);
 }
 
 .btn--primary:hover,
 .btn--primary:focus {
-  background-color: #e6c200;
-  border-color: #e6c200;
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-lg);
+  background: linear-gradient(135deg, #5A52E8 0%, var(--ethereum-highlight) 100%);
+  border-color: #5A52E8;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+  color: var(--white);
 }
 
 .btn--secondary {
   background-color: transparent;
-  color: var(--white);
-  border-color: rgba(255, 255, 255, 0.3);
+  color: var(--ethereum-accent);
+  border-color: var(--ethereum-accent);
+  font-weight: 500;
 }
 
 .btn--secondary:hover,
 .btn--secondary:focus {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.5);
-  color: var(--white);
+  background-color: var(--ethereum-accent);
+  border-color: var(--ethereum-accent);
+  color: var(--ethereum-black);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
 .btn--outline {
   background-color: transparent;
-  color: var(--ethereum-primary);
-  border-color: var(--ethereum-primary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+  font-weight: 500;
 }
 
 .btn--outline:hover,
 .btn--outline:focus {
-  background-color: var(--ethereum-primary);
+  background-color: var(--ethereum-highlight);
   color: var(--white);
+  border-color: var(--ethereum-highlight);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
 .btn--lg {
@@ -505,28 +589,48 @@ blockquote {
   background-color: var(--bg-secondary);
   border: var(--border-width) solid var(--border-color);
   border-radius: var(--border-radius-lg);
-  padding: var(--space-6);
+  padding: var(--space-8);
   transition: all var(--transition-normal);
   box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ethereum-highlight), var(--ethereum-accent));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition-normal);
 }
 
 .card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--ethereum-primary);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--border-color-hover);
+}
+
+.card:hover::before {
+  transform: scaleX(1);
 }
 
 .card__icon {
-  width: 48px;
-  height: 48px;
-  background: linear-gradient(135deg, var(--ethereum-primary), var(--ethereum-secondary));
-  border-radius: var(--border-radius);
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, var(--ethereum-highlight) 0%, var(--ethereum-accent) 100%);
+  border-radius: var(--border-radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--white);
-  font-size: var(--text-xl);
-  margin-bottom: var(--space-4);
+  font-size: var(--text-2xl);
+  margin-bottom: var(--space-5);
+  box-shadow: var(--shadow-md);
 }
 
 .card__title {
@@ -647,15 +751,15 @@ blockquote {
 
 .toc__link:hover,
 .toc__link:focus {
-  color: var(--ethereum-primary);
-  background-color: rgba(98, 126, 234, 0.1);
-  border-left-color: var(--ethereum-primary);
+  color: var(--ethereum-highlight);
+  background-color: rgba(108, 99, 255, 0.1);
+  border-left-color: var(--ethereum-highlight);
 }
 
 .toc__link--active {
-  color: var(--ethereum-primary);
-  background-color: rgba(98, 126, 234, 0.1);
-  border-left-color: var(--ethereum-primary);
+  color: var(--ethereum-highlight);
+  background-color: rgba(108, 99, 255, 0.15);
+  border-left-color: var(--ethereum-highlight);
   font-weight: 600;
 }
 
@@ -665,10 +769,11 @@ blockquote {
   top: var(--header-height);
   left: 0;
   width: 0%;
-  height: 3px;
-  background: linear-gradient(90deg, var(--ethereum-primary), var(--ethereum-accent));
+  height: 4px;
+  background: linear-gradient(90deg, var(--ethereum-highlight) 0%, var(--ethereum-accent) 100%);
   z-index: var(--z-fixed);
   transition: width 0.1s ease;
+  box-shadow: 0 0 8px rgba(108, 99, 255, 0.3);
 }
 
 /* =============================================================================
@@ -693,9 +798,9 @@ blockquote {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 60px;
-  height: 3px;
-  background: linear-gradient(90deg, var(--ethereum-primary), var(--ethereum-accent));
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--ethereum-highlight) 0%, var(--ethereum-accent) 100%);
   border-radius: 2px;
 }
 
@@ -729,8 +834,8 @@ blockquote {
 
 .search-input:focus {
   outline: none;
-  border-color: var(--ethereum-primary);
-  box-shadow: 0 0 0 3px rgba(98, 126, 234, 0.1);
+  border-color: var(--ethereum-highlight);
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
 }
 
 .search-input::placeholder {
@@ -751,16 +856,16 @@ blockquote {
 }
 
 .glossary-term:hover {
-  border-color: var(--ethereum-primary);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
+  border-color: var(--ethereum-highlight);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
 .glossary-term__title {
   font-size: var(--text-xl);
   font-weight: 600;
   margin-bottom: var(--space-3);
-  color: var(--ethereum-primary);
+  color: var(--ethereum-highlight);
 }
 
 .glossary-term__definition {
@@ -816,7 +921,7 @@ blockquote {
 
 .footer__links a:hover,
 .footer__links a:focus {
-  color: var(--ethereum-primary);
+  color: var(--ethereum-highlight);
 }
 
 .footer__bottom {
@@ -912,7 +1017,7 @@ blockquote {
 
 /* Focus Management */
 :focus {
-  outline: 2px solid var(--ethereum-primary);
+  outline: 2px solid var(--ethereum-highlight);
   outline-offset: 2px;
 }
 
@@ -921,7 +1026,7 @@ a:focus,
 input:focus,
 textarea:focus,
 select:focus {
-  outline: 2px solid var(--ethereum-primary);
+  outline: 2px solid var(--ethereum-highlight);
   outline-offset: 2px;
 }
 
@@ -1007,4 +1112,130 @@ select:focus {
 
 .no-js .mobile-menu-toggle {
   display: none;
+}
+
+/* =============================================================================
+   Professional Ethereum-Inspired Enhancements
+   ============================================================================= */
+
+/* Ethereum Diamond Logo Animation */
+@keyframes ethereumPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.ethereum-logo {
+  animation: ethereumPulse 3s ease-in-out infinite;
+}
+
+/* Professional Code Blocks */
+pre {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--ethereum-highlight);
+  position: relative;
+}
+
+pre::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--ethereum-highlight), transparent);
+}
+
+/* Enhanced Links */
+a {
+  color: var(--ethereum-highlight);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: all var(--transition-fast);
+}
+
+a:hover, a:focus {
+  color: var(--ethereum-accent);
+  border-bottom-color: var(--ethereum-accent);
+}
+
+/* Professional Blockquotes */
+blockquote {
+  border-left: 4px solid var(--ethereum-accent);
+  background: rgba(195, 153, 107, 0.05);
+  position: relative;
+  font-style: normal;
+}
+
+blockquote::before {
+  content: '"';
+  font-size: 3rem;
+  color: var(--ethereum-accent);
+  position: absolute;
+  top: -10px;
+  left: 16px;
+  line-height: 1;
+  font-family: Georgia, serif;
+}
+
+/* Enhanced Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-6) 0;
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+th, td {
+  padding: var(--space-4);
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+th {
+  background: var(--ethereum-highlight);
+  color: var(--white);
+  font-weight: 600;
+}
+
+tr:hover {
+  background: rgba(108, 99, 255, 0.05);
+}
+
+/* Ethereum-inspired Separators */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    var(--ethereum-highlight) 50%, 
+    transparent 100%
+  );
+  margin: var(--space-16) 0;
+}
+
+/* Enhanced Selection */
+::selection {
+  background: rgba(108, 99, 255, 0.2);
+  color: var(--text-primary);
+}
+
+/* Ethereum-inspired Gradients */
+.ethereum-gradient {
+  background: linear-gradient(135deg, 
+    var(--ethereum-highlight) 0%, 
+    var(--ethereum-accent) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Enhanced Dark Mode Transitions */
+* {
+  transition: background-color var(--transition-normal), 
+              border-color var(--transition-normal), 
+              color var(--transition-normal);
 }
