@@ -23,6 +23,9 @@ export function HomePage() {
               <a href="#what-youll-learn" class="btn btn--secondary btn--lg">
                 What You'll Learn
               </a>
+              <button id="hero-connect-wallet" class="btn btn--outline btn--lg" onclick="EthereumStory.web3.connectWallet()">
+                💎 Access Premium
+              </button>
             </div>
           </div>
         </section>
@@ -79,6 +82,39 @@ export function HomePage() {
                   Learn about current challenges, ongoing developments, and what Ethereum means for the future.
                 </p>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Premium Teaser Section */}
+        <section class="section premium-teaser" style="background: linear-gradient(135deg, var(--ethereum-highlight), var(--ethereum-accent)); color: var(--white); text-align: center;">
+          <div class="container">
+            <h2 style="color: var(--white); margin-bottom: var(--space-6);">🔥 Exclusive Premium Content Available</h2>
+            <p style="font-size: var(--text-xl); margin-bottom: var(--space-8); opacity: 0.95; max-width: 700px; margin-left: auto; margin-right: auto;">
+              Join 200+ holders of <strong>allthingscrypto.eth</strong> subdomains and unlock advanced strategies, 
+              market analysis, and exclusive community access.
+            </p>
+            <div style="display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap; margin-bottom: var(--space-8);">
+              <div style="background: rgba(255, 255, 255, 0.1); padding: var(--space-4); border-radius: var(--border-radius); backdrop-filter: blur(10px);">
+                <div style="font-size: var(--text-2xl); font-weight: 700; margin-bottom: var(--space-2);">Advanced DeFi</div>
+                <div style="font-size: var(--text-sm); opacity: 0.8;">Yield farming secrets</div>
+              </div>
+              <div style="background: rgba(255, 255, 255, 0.1); padding: var(--space-4); border-radius: var(--border-radius); backdrop-filter: blur(10px);">
+                <div style="font-size: var(--text-2xl); font-weight: 700; margin-bottom: var(--space-2);">Market Intel</div>
+                <div style="font-size: var(--text-sm); opacity: 0.8;">Weekly analysis</div>
+              </div>
+              <div style="background: rgba(255, 255, 255, 0.1); padding: var(--space-4); border-radius: var(--border-radius); backdrop-filter: blur(10px);">
+                <div style="font-size: var(--text-2xl); font-weight: 700; margin-bottom: var(--space-2);">Elite Community</div>
+                <div style="font-size: var(--text-sm); opacity: 0.8;">Private Discord</div>
+              </div>
+            </div>
+            <div style="display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap;">
+              <a href="/premium" class="btn btn--secondary btn--lg" style="background: var(--white); color: var(--ethereum-highlight); border-color: var(--white);">
+                View Premium Content →
+              </a>
+              <button class="btn btn--outline btn--lg" onclick="EthereumStory.web3.connectWallet()" style="border-color: rgba(255, 255, 255, 0.5); color: var(--white);">
+                Connect Wallet
+              </button>
             </div>
           </div>
         </section>

@@ -25,10 +25,14 @@ export function Header() {
               <li class="nav-menu__item">
                 <a href="/about" class="nav-menu__link">About</a>
               </li>
+              <li class="nav-menu__item premium-nav" style="display: none;">
+                <a href="/premium" class="nav-menu__link nav-menu__link--premium">💎 Premium</a>
+              </li>
             </ul>
           </nav>
           
           <div class="header__controls">
+            <div class="wallet-status"></div>
             <button 
               id="theme-toggle"
               class="theme-toggle" 

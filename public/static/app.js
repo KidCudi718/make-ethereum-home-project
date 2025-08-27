@@ -15,7 +15,18 @@ const EthereumStory = {
     scrollProgress: 0,
     activeSection: '',
     searchQuery: '',
-    glossaryTerms: []
+    glossaryTerms: [],
+    // Web3 & Token Gating State
+    web3: {
+      isConnected: false,
+      account: null,
+      provider: null,
+      ensName: null,
+      hasAccess: false,
+      accessLevel: null,
+      isLoading: false,
+      error: null
+    }
   },
 
   // Configuration
@@ -40,6 +51,7 @@ const EthereumStory = {
     this.initializeGlossarySearch();
     this.initializeMobileMenu();
     this.initializeAccessibility();
+    this.initializeWeb3();
     console.log('🚀 Ethereum Story app initialized');
   }
 };
@@ -904,10 +916,405 @@ EthereumStory.setupEventListeners = function() {
 };
 
 // =============================================================================
+// Web3 & Token Gating System
+// =============================================================================
+EthereumStory.web3 = {
+  // Initialize Web3 connection
+  async initialize() {
+    console.log('🔗 Initializing Web3 system...');
+    
+    // Check if wallet is already connected
+    if (typeof window.ethereum !== 'undefined') {
+      try {
+        const accounts = await window.ethereum.request({ 
+          method: 'eth_accounts' 
+        });
+        
+        if (accounts.length > 0) {
+          await this.connectWallet();
+        }
+      } catch (error) {
+        console.log('No existing connection found');
+      }
+    }
+    
+    // Listen for account changes
+    if (window.ethereum) {
+      window.ethereum.on('accountsChanged', (accounts) => {
+        if (accounts.length === 0) {
+          this.disconnect();
+        } else {
+          this.connectWallet();
+        }
+      });
+      
+      window.ethereum.on('chainChanged', () => {
+        window.location.reload();
+      });
+    }
+    
+    this.updateUI();
+  },
+
+  // Connect wallet (MetaMask)
+  async connectWallet() {
+    if (typeof window.ethereum === 'undefined') {
+      this.showError('Please install MetaMask to access premium content!');
+      return false;
+    }
+
+    try {
+      EthereumStory.state.web3.isLoading = true;
+      this.updateUI();
+      
+      // Request account access
+      const accounts = await window.ethereum.request({
+        method: 'eth_requestAccounts'
+      });
+      
+      if (accounts.length === 0) {
+        throw new Error('No accounts found');
+      }
+
+      const account = accounts[0];
+      EthereumStory.state.web3.account = account;
+      EthereumStory.state.web3.isConnected = true;
+      
+      console.log('💰 Wallet connected:', account);
+      
+      // Verify ENS ownership
+      await this.verifyENSOwnership(account);
+      
+      EthereumStory.state.web3.isLoading = false;
+      this.updateUI();
+      
+      return true;
+    } catch (error) {
+      console.error('❌ Wallet connection failed:', error);
+      EthereumStory.state.web3.isLoading = false;
+      this.showError('Failed to connect wallet: ' + error.message);
+      this.updateUI();
+      return false;
+    }
+  },
+
+  // Verify ENS subdomain ownership
+  async verifyENSOwnership(account) {
+    try {
+      console.log('🔍 Checking ENS ownership for:', account);
+      
+      // Check if user owns any allthingscrypto.eth subdomains
+      const hasAccess = await this.checkENSSubdomains(account);
+      
+      EthereumStory.state.web3.hasAccess = hasAccess.hasAccess;
+      EthereumStory.state.web3.ensName = hasAccess.ensName;
+      EthereumStory.state.web3.accessLevel = hasAccess.accessLevel;
+      
+      if (hasAccess.hasAccess) {
+        console.log(`✅ Premium access granted for: ${hasAccess.ensName}`);
+        this.unlockPremiumContent();
+      } else {
+        console.log('❌ No valid ENS subdomain found');
+        this.lockPremiumContent();
+      }
+      
+    } catch (error) {
+      console.error('❌ ENS verification failed:', error);
+      EthereumStory.state.web3.hasAccess = false;
+      this.showError('Failed to verify ENS ownership');
+    }
+  },
+
+  // Check ENS subdomains (this is where the magic happens!)
+  async checkENSSubdomains(account) {
+    try {
+      // We'll use multiple methods to check ENS ownership
+      
+      // Method 1: Check via ENS reverse lookup
+      const ensName = await this.reverseENSLookup(account);
+      if (ensName && ensName.endsWith('.allthingscrypto.eth')) {
+        return {
+          hasAccess: true,
+          ensName: ensName,
+          accessLevel: this.getAccessLevel(ensName)
+        };
+      }
+      
+      // Method 2: Check via ENS registry (more comprehensive)
+      const subdomains = await this.getAllENSSubdomains(account);
+      const validSubdomain = subdomains.find(name => 
+        name.endsWith('.allthingscrypto.eth')
+      );
+      
+      if (validSubdomain) {
+        return {
+          hasAccess: true,
+          ensName: validSubdomain,
+          accessLevel: this.getAccessLevel(validSubdomain)
+        };
+      }
+      
+      return { hasAccess: false, ensName: null, accessLevel: null };
+      
+    } catch (error) {
+      console.error('ENS check error:', error);
+      return { hasAccess: false, ensName: null, accessLevel: null };
+    }
+  },
+
+  // Reverse ENS lookup
+  async reverseENSLookup(account) {
+    try {
+      // Using Ethereum mainnet
+      const response = await fetch(`https://api.ensideas.com/ens/resolve/${account}`);
+      const data = await response.json();
+      return data.name || null;
+    } catch (error) {
+      console.log('Reverse lookup failed, trying alternative method...');
+      
+      // Fallback to direct ENS check
+      try {
+        const ensResponse = await fetch(`https://metadata.ens.domains/mainnet/avatar/${account}`);
+        if (ensResponse.ok) {
+          // This is a basic check - we'll enhance it
+          return null; // Will implement more robust checking
+        }
+      } catch (e) {
+        console.log('ENS API check failed');
+      }
+      
+      return null;
+    }
+  },
+
+  // Get all ENS subdomains for an account (comprehensive method)
+  async getAllENSSubdomains(account) {
+    try {
+      // This is a simplified version - in production you'd want to use
+      // The Graph protocol or direct contract calls
+      
+      // For now, we'll use a mock check that works with your 200+ holders
+      // In production, you'd integrate with ENS subgraph or direct contract calls
+      
+      const response = await fetch('/api/check-ens-ownership', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ account })
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        return data.subdomains || [];
+      }
+      
+      return [];
+    } catch (error) {
+      console.log('Subdomain check failed:', error);
+      return [];
+    }
+  },
+
+  // Determine access level based on ENS name
+  getAccessLevel(ensName) {
+    if (!ensName) return null;
+    
+    // Different access levels based on subdomain
+    if (ensName.includes('founder.') || ensName.includes('genesis.')) {
+      return 'founder';
+    } else if (ensName.includes('premium.') || ensName.includes('pro.')) {
+      return 'premium';
+    } else if (ensName.includes('diamond.') || ensName.includes('platinum.')) {
+      return 'diamond';
+    } else {
+      return 'standard';
+    }
+  },
+
+  // Unlock premium content
+  unlockPremiumContent() {
+    // Remove locks from premium sections
+    document.querySelectorAll('.premium-locked').forEach(el => {
+      el.classList.remove('premium-locked');
+      el.classList.add('premium-unlocked');
+    });
+    
+    // Show premium navigation items
+    document.querySelectorAll('.premium-nav').forEach(el => {
+      el.style.display = 'block';
+    });
+    
+    // Update premium status indicators
+    document.querySelectorAll('.premium-status').forEach(el => {
+      el.innerHTML = `
+        <div class="premium-badge">
+          <span class="premium-badge__icon">💎</span>
+          <span class="premium-badge__text">Premium Access Granted</span>
+          <span class="premium-badge__ens">${EthereumStory.state.web3.ensName}</span>
+        </div>
+      `;
+    });
+    
+    // Update user ENS name displays
+    document.querySelectorAll('.user-ens-name').forEach(el => {
+      el.textContent = EthereumStory.state.web3.ensName;
+    });
+    
+    // Show success message
+    this.showSuccessMessage(`Welcome back, ${EthereumStory.state.web3.ensName}! 🎉`);
+    
+    // Dispatch custom event
+    document.dispatchEvent(new CustomEvent('premiumUnlocked', {
+      detail: {
+        ensName: EthereumStory.state.web3.ensName,
+        accessLevel: EthereumStory.state.web3.accessLevel
+      }
+    }));
+    
+    console.log('🔓 Premium content unlocked!');
+  },
+
+  // Show success message
+  showSuccessMessage(message) {
+    const toast = document.createElement('div');
+    toast.className = 'web3-toast web3-toast--success';
+    toast.innerHTML = `
+      <div class="web3-toast__content" style="background: var(--success); color: var(--white);">
+        <span class="web3-toast__icon">✅</span>
+        <span class="web3-toast__message">${message}</span>
+        <button class="web3-toast__close" onclick="this.parentElement.parentElement.remove()">×</button>
+      </div>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+      if (toast.parentElement) {
+        toast.remove();
+      }
+    }, 5000);
+  },
+
+  // Lock premium content
+  lockPremiumContent() {
+    document.querySelectorAll('.premium-unlocked').forEach(el => {
+      el.classList.remove('premium-unlocked');
+      el.classList.add('premium-locked');
+    });
+    
+    document.querySelectorAll('.premium-nav').forEach(el => {
+      el.style.display = 'none';
+    });
+    
+    document.querySelectorAll('.premium-status').forEach(el => {
+      el.innerHTML = `
+        <div class="premium-prompt">
+          <span class="premium-prompt__text">Connect your allthingscrypto.eth wallet to access premium content</span>
+          <button class="btn btn--primary btn-connect-wallet">Connect Wallet</button>
+        </div>
+      `;
+    });
+    
+    console.log('🔒 Premium content locked');
+  },
+
+  // Disconnect wallet
+  disconnect() {
+    EthereumStory.state.web3 = {
+      isConnected: false,
+      account: null,
+      provider: null,
+      ensName: null,
+      hasAccess: false,
+      accessLevel: null,
+      isLoading: false,
+      error: null
+    };
+    
+    this.lockPremiumContent();
+    this.updateUI();
+    
+    console.log('👋 Wallet disconnected');
+  },
+
+  // Show error message
+  showError(message) {
+    EthereumStory.state.web3.error = message;
+    
+    // Create toast notification
+    const toast = document.createElement('div');
+    toast.className = 'web3-toast web3-toast--error';
+    toast.innerHTML = `
+      <div class="web3-toast__content">
+        <span class="web3-toast__icon">⚠️</span>
+        <span class="web3-toast__message">${message}</span>
+        <button class="web3-toast__close" onclick="this.parentElement.parentElement.remove()">×</button>
+      </div>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+      if (toast.parentElement) {
+        toast.remove();
+      }
+    }, 5000);
+  },
+
+  // Update UI based on Web3 state
+  updateUI() {
+    const connectButton = document.getElementById('connect-wallet-btn');
+    const walletStatus = document.querySelector('.wallet-status');
+    
+    if (connectButton) {
+      if (EthereumStory.state.web3.isLoading) {
+        connectButton.textContent = 'Connecting...';
+        connectButton.disabled = true;
+      } else if (EthereumStory.state.web3.isConnected) {
+        connectButton.textContent = 'Connected';
+        connectButton.disabled = true;
+        connectButton.classList.add('btn--success');
+      } else {
+        connectButton.textContent = 'Connect Wallet';
+        connectButton.disabled = false;
+        connectButton.classList.remove('btn--success');
+      }
+    }
+    
+    if (walletStatus) {
+      if (EthereumStory.state.web3.isConnected) {
+        const shortAddress = EthereumStory.state.web3.account.slice(0, 6) + '...' + 
+                           EthereumStory.state.web3.account.slice(-4);
+        const ensDisplay = EthereumStory.state.web3.ensName || shortAddress;
+        
+        walletStatus.innerHTML = `
+          <div class="wallet-info">
+            <span class="wallet-info__ens">${ensDisplay}</span>
+            ${EthereumStory.state.web3.hasAccess ? 
+              '<span class="wallet-info__badge">💎 Premium</span>' : 
+              '<span class="wallet-info__badge">🔒 Standard</span>'
+            }
+            <button class="wallet-info__disconnect" onclick="EthereumStory.web3.disconnect()">Disconnect</button>
+          </div>
+        `;
+      } else {
+        walletStatus.innerHTML = '';
+      }
+    }
+  }
+};
+
+// =============================================================================
 // Initialization Functions
 // =============================================================================
 EthereumStory.initializeTheme = function() {
   EthereumStory.theme.initialize();
+};
+
+EthereumStory.initializeWeb3 = function() {
+  EthereumStory.web3.initialize();
 };
 
 EthereumStory.initializeScrollProgress = function() {
