@@ -63,14 +63,19 @@ app.post('/api/check-ens-ownership', async (c) => {
     
     console.log('🔍 Checking ENS ownership for:', account)
     
-    // Check for allthingscrypto.eth subdomains
+    // Check for allthingscrypto.eth subdomains using multiple methods
     const ownedSubdomains = await checkAllThingsCryptoENS(account)
     
     return c.json({
       account,
       subdomains: ownedSubdomains,
       hasAccess: ownedSubdomains.length > 0,
-      timestamp: new Date().toISOString()
+      accessLevel: getAccessLevel(ownedSubdomains[0]),
+      ensName: ownedSubdomains[0] || null,
+      timestamp: new Date().toISOString(),
+      message: ownedSubdomains.length > 0 ? 
+        `Welcome back, ${ownedSubdomains[0]}! 🎉` : 
+        'No allthingscrypto.eth subdomain found for this wallet.'
     })
     
   } catch (error) {
@@ -91,15 +96,25 @@ app.get('/api/premium/status', async (c) => {
 // Helper functions for ENS checking
 async function checkAllThingsCryptoENS(account: string) {
   try {
-    // Method 1: Check via ENS reverse resolver
+    // Method 1: Check via ENS reverse resolver (real API)
     const reverseResult = await checkENSReverse(account)
-    if (reverseResult) {
+    if (reverseResult && reverseResult.endsWith('.allthingscrypto.eth')) {
       return [reverseResult]
     }
     
-    // Method 2: Simulate check for development/testing
-    const simulatedResult = simulateENSCheck(account)
-    return simulatedResult
+    // Method 2: Check via ENS subgraph (for comprehensive checking)
+    const subgraphResult = await checkENSSubgraph(account)
+    if (subgraphResult.length > 0) {
+      return subgraphResult
+    }
+    
+    // Method 3: Demo accounts for testing (remove in production)
+    const demoResult = simulateENSCheck(account)
+    if (demoResult.length > 0) {
+      return demoResult
+    }
+    
+    return []
     
   } catch (error) {
     console.error('ENS check failed:', error)
@@ -109,12 +124,24 @@ async function checkAllThingsCryptoENS(account: string) {
 
 async function checkENSReverse(account: string) {
   try {
-    // Using public ENS API - you could enhance this
-    const response = await fetch(`https://api.ensideas.com/ens/resolve/${account}`)
-    const data = await response.json()
+    // Method 1: ENS Ideas API
+    const response1 = await fetch(`https://api.ensideas.com/ens/resolve/${account}`)
+    if (response1.ok) {
+      const data = await response1.json()
+      if (data.name && data.name.endsWith('.allthingscrypto.eth')) {
+        console.log('✅ Found ENS via reverse lookup:', data.name)
+        return data.name
+      }
+    }
     
-    if (data.name && data.name.endsWith('.allthingscrypto.eth')) {
-      return data.name
+    // Method 2: ENS Metadata API
+    const response2 = await fetch(`https://metadata.ens.domains/mainnet/${account}`)
+    if (response2.ok) {
+      const data = await response2.json()
+      if (data.name && data.name.endsWith('.allthingscrypto.eth')) {
+        console.log('✅ Found ENS via metadata API:', data.name)
+        return data.name
+      }
     }
     
     return null
@@ -124,16 +151,82 @@ async function checkENSReverse(account: string) {
   }
 }
 
+// Check ENS subgraph for comprehensive subdomain verification
+async function checkENSSubgraph(account: string) {
+  try {
+    // Using The Graph protocol ENS subgraph
+    const query = `{
+      domains(where: {owner: "${account.toLowerCase()}", name_contains: ".allthingscrypto.eth"}) {
+        name
+        owner {
+          id
+        }
+      }
+    }`
+    
+    const response = await fetch('https://api.thegraph.com/subgraphs/name/ensdomains/ens', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query })
+    })
+    
+    if (response.ok) {
+      const data = await response.json()
+      if (data.data && data.data.domains) {
+        const domains = data.data.domains
+          .filter((domain: any) => domain.name.endsWith('.allthingscrypto.eth'))
+          .map((domain: any) => domain.name)
+        
+        if (domains.length > 0) {
+          console.log('✅ Found ENS subdomains via subgraph:', domains)
+          return domains
+        }
+      }
+    }
+    
+    return []
+  } catch (error) {
+    console.log('ENS subgraph check failed:', error)
+    return []
+  }
+}
+
 function simulateENSCheck(account: string) {
-  // Test accounts for development - add your actual holders here
+  // Demo accounts for testing - replace with real data in production
   const testAccounts: { [key: string]: string[] } = {
     '0x742d35cc6636Bb6eE6c4b7C0D1D95D8b7E8C9E8F': ['founder.allthingscrypto.eth'],
     '0x8ba1f109551bD432803012645Hac136c31167c01': ['premium.allthingscrypto.eth'],
     '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045': ['diamond.allthingscrypto.eth'],
-    // Add more test accounts for your 200+ holders
+    '0x1234567890123456789012345678901234567890': ['vitalik.allthingscrypto.eth'],
+    '0xabcdefabcdefabcdefabcdefabcdefabcdefabcd': ['satoshi.allthingscrypto.eth'],
+    '0x0000000000000000000000000000000000000001': ['demo.allthingscrypto.eth'],
+    // Add more test accounts representing your 200+ holders
   }
   
-  return testAccounts[account.toLowerCase()] || []
+  const found = testAccounts[account.toLowerCase()] || []
+  if (found.length > 0) {
+    console.log('✅ Found demo ENS account:', found)
+  }
+  return found
+}
+
+// Get access level based on ENS subdomain
+function getAccessLevel(ensName: string | null) {
+  if (!ensName) return 'none'
+  
+  if (ensName.includes('founder.') || ensName.includes('genesis.')) {
+    return 'founder'
+  } else if (ensName.includes('premium.') || ensName.includes('pro.')) {
+    return 'premium'  
+  } else if (ensName.includes('diamond.') || ensName.includes('platinum.')) {
+    return 'diamond'
+  } else if (ensName.includes('vitalik.') || ensName.includes('satoshi.')) {
+    return 'legendary'
+  } else {
+    return 'standard'
+  }
 }
 
 // Simplified Resources and About pages

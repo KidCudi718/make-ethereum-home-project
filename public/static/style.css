@@ -1554,3 +1554,41 @@ tr:hover {
   background-clip: text;
   font-weight: 600;
 }
+/* =============================================================================
+   Premium Content Unlock Animations
+   ============================================================================= */
+@keyframes fadeInSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes premiumGlow {
+  0% {
+    box-shadow: 0 8px 25px rgba(108, 99, 255, 0.3), 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  100% {
+    box-shadow: 0 12px 35px rgba(108, 99, 255, 0.4), 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+@keyframes videoProgress {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}

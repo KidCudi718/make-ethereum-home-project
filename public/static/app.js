@@ -1134,6 +1134,21 @@ EthereumStory.web3 = {
 
   // Unlock premium content
   unlockPremiumContent() {
+    console.log('🔓 Unlocking premium content for:', EthereumStory.state.web3.ensName);
+    
+    // Hide lock screen and show premium content
+    const lockScreen = document.querySelector('.premium-lock-screen');
+    const unlockedContent = document.querySelector('.premium-unlocked-content');
+    
+    if (lockScreen) {
+      lockScreen.style.display = 'none';
+    }
+    
+    if (unlockedContent) {
+      unlockedContent.style.display = 'block';
+      unlockedContent.style.animation = 'fadeInSlideUp 0.8s ease-out';
+    }
+    
     // Remove locks from premium sections
     document.querySelectorAll('.premium-locked').forEach(el => {
       el.classList.remove('premium-locked');
@@ -1147,11 +1162,26 @@ EthereumStory.web3 = {
     
     // Update premium status indicators
     document.querySelectorAll('.premium-status').forEach(el => {
+      const accessLevel = EthereumStory.state.web3.accessLevel;
+      const badge = accessLevel === 'founder' ? '👑' : 
+                   accessLevel === 'diamond' ? '💎' : 
+                   accessLevel === 'premium' ? '⭐' : 
+                   accessLevel === 'legendary' ? '🚀' : '✨';
+      
       el.innerHTML = `
-        <div class="premium-badge">
-          <span class="premium-badge__icon">💎</span>
-          <span class="premium-badge__text">Premium Access Granted</span>
-          <span class="premium-badge__ens">${EthereumStory.state.web3.ensName}</span>
+        <div class="premium-badge premium-badge--${accessLevel}" style="
+          background: linear-gradient(135deg, var(--ethereum-highlight), var(--ethereum-accent));
+          color: var(--white);
+          padding: var(--space-4) var(--space-6);
+          border-radius: var(--border-radius-lg);
+          text-align: center;
+          box-shadow: var(--shadow-glow);
+          animation: premiumGlow 2s ease-in-out infinite alternate;
+        ">
+          <div style="font-size: var(--text-2xl); margin-bottom: var(--space-2);">${badge}</div>
+          <div style="font-weight: 600; margin-bottom: var(--space-1);">Premium Access Granted</div>
+          <div style="opacity: 0.9; font-size: var(--text-sm);">${EthereumStory.state.web3.ensName}</div>
+          <div style="opacity: 0.8; font-size: var(--text-xs); text-transform: capitalize;">${accessLevel} Tier</div>
         </div>
       `;
     });
@@ -1161,8 +1191,12 @@ EthereumStory.web3 = {
       el.textContent = EthereumStory.state.web3.ensName;
     });
     
-    // Show success message
-    this.showSuccessMessage(`Welcome back, ${EthereumStory.state.web3.ensName}! 🎉`);
+    // Enable premium video content
+    this.enableVideoContent();
+    
+    // Show success message with access level
+    const welcomeMessage = `Welcome back, ${EthereumStory.state.web3.ensName}! You have ${EthereumStory.state.web3.accessLevel} tier access 🎉`;
+    this.showSuccessMessage(welcomeMessage);
     
     // Dispatch custom event
     document.dispatchEvent(new CustomEvent('premiumUnlocked', {
@@ -1173,6 +1207,121 @@ EthereumStory.web3 = {
     }));
     
     console.log('🔓 Premium content unlocked!');
+  },
+
+  // Enable premium video content with interactive features
+  enableVideoContent() {
+    const videoSection = document.querySelector('.premium-video-section');
+    if (videoSection) {
+      // Add premium styling
+      videoSection.style.border = '2px solid var(--ethereum-highlight)';
+      videoSection.style.boxShadow = 'var(--shadow-glow)';
+      
+      // Enable video placeholder click
+      const videoPlaceholder = videoSection.querySelector('.video-placeholder');
+      if (videoPlaceholder) {
+        videoPlaceholder.style.cursor = 'pointer';
+        videoPlaceholder.onclick = () => {
+          this.showVideoPlayer();
+        };
+      }
+      
+      // Enable video button
+      const videoButton = videoSection.querySelector('button');
+      if (videoButton) {
+        videoButton.style.cursor = 'pointer';
+        videoButton.onclick = () => {
+          this.showVideoPlayer();
+        };
+      }
+    }
+  },
+
+  // Show the actual video player (simulated for demo)
+  showVideoPlayer() {
+    const videoWrapper = document.querySelector('.video-content-wrapper');
+    if (videoWrapper) {
+      // Create video player interface
+      const videoPlayerHTML = `
+        <div class="premium-video-player" style="
+          background: #000;
+          border-radius: var(--border-radius);
+          padding: 0;
+          margin-bottom: var(--space-6);
+          position: relative;
+          aspect-ratio: 16/9;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 3px solid var(--ethereum-highlight);
+          box-shadow: var(--shadow-glow);
+        ">
+          <div style="text-align: center; color: var(--white);">
+            <div style="font-size: var(--text-4xl); margin-bottom: var(--space-4);">🎬</div>
+            <h3 style="color: var(--white); margin-bottom: var(--space-3);">WTF is ENS on Ethereum</h3>
+            <p style="opacity: 0.8; margin-bottom: var(--space-4);">
+              Exclusive 4:41 podcast with Alex Martinez & Sophia Chen
+            </p>
+            <div style="display: flex; gap: var(--space-3); justify-content: center;">
+              <button class="btn btn--primary" onclick="EthereumStory.web3.playVideo()">
+                ▶️ Play Video
+              </button>
+              <button class="btn btn--outline" style="color: var(--white); border-color: rgba(255,255,255,0.3);">
+                📝 Show Transcript
+              </button>
+            </div>
+            <div style="margin-top: var(--space-4); font-size: var(--text-sm); opacity: 0.7;">
+              🔒 Only available to verified allthingscrypto.eth holders
+            </div>
+          </div>
+        </div>
+      `;
+      
+      // Replace video placeholder with player
+      const videoPlaceholder = videoWrapper.querySelector('.video-placeholder');
+      if (videoPlaceholder) {
+        videoPlaceholder.outerHTML = videoPlayerHTML;
+      }
+      
+      // Show success message
+      this.showSuccessMessage('🎬 Premium video unlocked! Ready to watch "WTF is ENS on Ethereum"');
+    }
+  },
+
+  // Simulate video playback (in production, this would load the actual video)
+  playVideo() {
+    // Show video is playing
+    const videoPlayer = document.querySelector('.premium-video-player');
+    if (videoPlayer) {
+      videoPlayer.innerHTML = `
+        <div style="text-align: center; color: var(--white);">
+          <div style="font-size: var(--text-4xl); margin-bottom: var(--space-4); animation: pulse 2s infinite;">📺</div>
+          <h3 style="color: var(--white); margin-bottom: var(--space-3);">Now Playing</h3>
+          <p style="opacity: 0.9; margin-bottom: var(--space-4); font-weight: 600;">
+            "WTF is ENS on Ethereum" - 4:41 Runtime
+          </p>
+          <div style="background: var(--ethereum-highlight); height: 4px; border-radius: 2px; margin: 0 var(--space-8); overflow: hidden;">
+            <div style="background: var(--white); height: 100%; width: 0%; animation: videoProgress 281s linear infinite;"></div>
+          </div>
+          <div style="margin-top: var(--space-4); display: flex; gap: var(--space-3); justify-content: center;">
+            <button class="btn btn--outline" style="color: var(--white); border-color: rgba(255,255,255,0.3);">
+              ⏸️ Pause
+            </button>
+            <button class="btn btn--outline" style="color: var(--white); border-color: rgba(255,255,255,0.3);">
+              🔊 Volume
+            </button>
+            <button class="btn btn--outline" style="color: var(--white); border-color: rgba(255,255,255,0.3);">
+              ⚙️ Settings
+            </button>
+          </div>
+          <div style="margin-top: var(--space-3); font-size: var(--text-xs); opacity: 0.7;">
+            Premium content • Verified ENS holder access
+          </div>
+        </div>
+      `;
+      
+      this.showSuccessMessage('🎬 Enjoy your exclusive content! This is premium material only for allthingscrypto.eth holders.');
+    }
   },
 
   // Show success message
@@ -1198,6 +1347,20 @@ EthereumStory.web3 = {
 
   // Lock premium content
   lockPremiumContent() {
+    console.log('🔒 Locking premium content');
+    
+    // Show lock screen and hide premium content
+    const lockScreen = document.querySelector('.premium-lock-screen');
+    const unlockedContent = document.querySelector('.premium-unlocked-content');
+    
+    if (lockScreen) {
+      lockScreen.style.display = 'block';
+    }
+    
+    if (unlockedContent) {
+      unlockedContent.style.display = 'none';
+    }
+    
     document.querySelectorAll('.premium-unlocked').forEach(el => {
       el.classList.remove('premium-unlocked');
       el.classList.add('premium-locked');
@@ -1209,9 +1372,17 @@ EthereumStory.web3 = {
     
     document.querySelectorAll('.premium-status').forEach(el => {
       el.innerHTML = `
-        <div class="premium-prompt">
-          <span class="premium-prompt__text">Connect your allthingscrypto.eth wallet to access premium content</span>
-          <button class="btn btn--primary btn-connect-wallet">Connect Wallet</button>
+        <div class="premium-prompt" style="
+          background: var(--bg-secondary);
+          border: 2px dashed var(--border-color);
+          padding: var(--space-6);
+          border-radius: var(--border-radius-lg);
+          text-align: center;
+        ">
+          <div style="font-size: var(--text-2xl); margin-bottom: var(--space-4);">🔒</div>
+          <div style="font-weight: 600; margin-bottom: var(--space-3);">Premium Access Required</div>
+          <div style="color: var(--text-secondary); margin-bottom: var(--space-4);">Connect your allthingscrypto.eth wallet to unlock exclusive content</div>
+          <button class="btn btn--primary btn-connect-wallet" onclick="EthereumStory.web3.connectWallet()">Connect Wallet</button>
         </div>
       `;
     });
