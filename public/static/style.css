@@ -446,11 +446,17 @@ blockquote {
     top: 100%;
     left: 0;
     right: 0;
-    background-color: var(--bg-primary);
+    background-color: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(12px);
     border-bottom: var(--border-width) solid var(--border-color);
     padding: var(--space-4) 0;
     flex-direction: column;
     gap: 0;
+    box-shadow: var(--shadow-lg);
+  }
+
+  [data-theme="dark"] .header__nav--mobile-open {
+    background-color: rgba(10, 10, 10, 0.98);
   }
 
   .nav-menu {
@@ -463,11 +469,18 @@ blockquote {
     display: block;
     padding: var(--space-4);
     border-bottom: var(--border-width) solid var(--border-color);
+    transition: all var(--transition-fast);
+  }
+
+  .nav-menu__link:hover {
+    background-color: rgba(108, 99, 255, 0.1);
+    padding-left: var(--space-6);
   }
 
   .header__controls {
     padding: 0 var(--container-padding);
     justify-content: flex-end;
+    margin-top: var(--space-4);
   }
 }
 

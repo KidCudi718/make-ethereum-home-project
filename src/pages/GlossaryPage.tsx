@@ -24,45 +24,45 @@ export function GlossaryPage() {
     <>
       <Header />
       
-      <main id="main">
-        <div class="container" style="padding-top: 3rem; padding-bottom: 5rem;">
-          <div class="content">
-            <header style="text-align: center; margin-bottom: 4rem;">
+      <main id="main-content" class="section">
+        <div class="container">
+            <header style="text-align: center; margin-bottom: var(--space-16);">
               <h1>Ethereum Glossary</h1>
-              <p style="font-size: var(--font-size-lg); color: var(--color-text-muted);">
+              <p style="font-size: var(--text-xl); color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
                 Essential blockchain and Ethereum terms explained in simple language
               </p>
             </header>
 
             <div class="glossary-search">
               <input 
+                id="glossary-search"
+                class="search-input"
                 type="text" 
                 placeholder="Search terms and definitions..." 
                 aria-label="Search glossary terms"
               />
             </div>
 
-            <div class="glossary-list">
+            <div class="glossary-grid">
               {glossaryTerms.map((item, index) => (
-                <div key={index} class="glossary-item">
-                  <h3 class="glossary-item__term">{item.term}</h3>
-                  <p class="glossary-item__definition">{item.definition}</p>
+                <div key={index} class="glossary-term">
+                  <h3 class="glossary-term__title">{item.term}</h3>
+                  <p class="glossary-term__definition">{item.definition}</p>
                 </div>
               ))}
             </div>
 
-            <section style="text-align: center; padding: 4rem 0; background-color: var(--color-bg-subtle); border-radius: var(--border-radius-lg); margin-top: 4rem;">
+            <section class="text-center" style="padding: var(--space-16) 0; background-color: var(--bg-secondary); border-radius: var(--border-radius-lg); margin-top: var(--space-16);">
               <h2>Need More Context?</h2>
-              <p style="margin-bottom: 2rem; color: var(--color-text-muted);">
+              <p style="margin-bottom: var(--space-8); color: var(--text-secondary); max-width: 500px; margin-left: auto; margin-right: auto;">
                 These terms make more sense when you understand the complete story behind them.
               </p>
-              <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+              <div class="hero__actions">
                 <a href="/chapters" class="btn btn--primary">Read the Full Story</a>
                 <a href="/resources" class="btn btn--secondary">Official Resources</a>
-                <a href="/" class="btn btn--secondary">Back to Home</a>
+                <a href="/" class="btn btn--outline">Back to Home</a>
               </div>
             </section>
-          </div>
         </div>
       </main>
 

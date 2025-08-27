@@ -3,55 +3,54 @@ export function Header() {
     <header class="header">
       <div class="container">
         <div class="header__content">
-          <a href="/" class="header__logo">
+          <a href="/" class="header__brand">
+            <div class="header__logo">E</div>
             The Complete Ethereum Story
           </a>
           
           <nav class="header__nav" role="navigation" aria-label="Main navigation">
-            <a href="/">Home</a>
-            <a href="/chapters">Chapters</a>
-            <a href="/glossary">Glossary</a>
-            <a href="/resources">Resources</a>
-            <a href="/about">About</a>
+            <ul class="nav-menu">
+              <li class="nav-menu__item">
+                <a href="/" class="nav-menu__link">Home</a>
+              </li>
+              <li class="nav-menu__item">
+                <a href="/chapters" class="nav-menu__link">Chapters</a>
+              </li>
+              <li class="nav-menu__item">
+                <a href="/glossary" class="nav-menu__link">Glossary</a>
+              </li>
+              <li class="nav-menu__item">
+                <a href="/resources" class="nav-menu__link">Resources</a>
+              </li>
+              <li class="nav-menu__item">
+                <a href="/about" class="nav-menu__link">About</a>
+              </li>
+            </ul>
           </nav>
           
-          <div class="header__actions">
+          <div class="header__controls">
             <button 
+              id="theme-toggle"
               class="theme-toggle" 
               type="button"
-              aria-label="Switch theme"
-              title="Toggle dark/light mode"
+              aria-label="Toggle theme"
+              title="Switch between light, dark, and auto themes"
             >
-              <span aria-hidden="true">🌙</span>
+              🌙
             </button>
             
             <button 
-              class="mobile-menu-button" 
+              id="mobile-menu-toggle"
+              class="mobile-menu-toggle" 
               type="button"
               aria-label="Open navigation menu"
               aria-expanded="false"
+              aria-controls="main-navigation"
             >
-              <span aria-hidden="true">☰</span>
+              ☰
             </button>
           </div>
         </div>
-      </div>
-      
-      {/* Mobile Menu */}
-      <div class="mobile-menu" role="navigation" aria-label="Mobile navigation">
-        <div class="mobile-menu__header">
-          <span class="header__logo">The Complete Ethereum Story</span>
-          <button class="mobile-menu__close theme-toggle" type="button" aria-label="Close navigation menu">
-            <span aria-hidden="true">✕</span>
-          </button>
-        </div>
-        <nav class="mobile-menu__nav">
-          <a href="/">Home</a>
-          <a href="/chapters">Chapters</a>
-          <a href="/glossary">Glossary</a>
-          <a href="/resources">Resources</a>
-          <a href="/about">About</a>
-        </nav>
       </div>
     </header>
   )
