@@ -23,7 +23,7 @@ export function HomePage() {
               <a href="#what-youll-learn" class="btn btn--secondary btn--lg">
                 What You'll Learn
               </a>
-              <button id="hero-connect-wallet" class="btn btn--outline btn--lg" onclick="EthereumStory.web3.connectWallet()">
+              <button id="hero-connect-wallet" class="btn btn--outline btn--lg">
                 💎 Access Premium
               </button>
             </div>
@@ -112,7 +112,7 @@ export function HomePage() {
               <a href="/premium" class="btn btn--secondary btn--lg" style="background: var(--white); color: var(--ethereum-highlight); border-color: var(--white);">
                 View Premium Content →
               </a>
-              <button class="btn btn--outline btn--lg" onclick="EthereumStory.web3.connectWallet()" style="border-color: rgba(255, 255, 255, 0.5); color: var(--white);">
+              <button id="premium-connect-wallet" class="btn btn--outline btn--lg" style="border-color: rgba(255, 255, 255, 0.5); color: var(--white);">
                 Connect Wallet
               </button>
             </div>

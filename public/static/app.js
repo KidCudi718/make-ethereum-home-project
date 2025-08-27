@@ -1628,6 +1628,39 @@ EthereumStory.utils = {
 // Auto-initialize when script loads
 EthereumStory.init();
 
+// Initialize wallet connection buttons
+EthereumStory.initializeWalletButtons = function() {
+  const heroConnectBtn = document.getElementById('hero-connect-wallet');
+  const premiumConnectBtn = document.getElementById('premium-connect-wallet');
+  
+  if (heroConnectBtn) {
+    heroConnectBtn.addEventListener('click', () => {
+      if (EthereumStory.web3 && EthereumStory.web3.connectWallet) {
+        EthereumStory.web3.connectWallet();
+      } else {
+        console.log('Web3 system not ready yet');
+      }
+    });
+  }
+  
+  if (premiumConnectBtn) {
+    premiumConnectBtn.addEventListener('click', () => {
+      if (EthereumStory.web3 && EthereumStory.web3.connectWallet) {
+        EthereumStory.web3.connectWallet();
+      } else {
+        console.log('Web3 system not ready yet');
+      }
+    });
+  }
+  
+  console.log('🔗 Wallet connection buttons initialized');
+};
+
+// Initialize wallet buttons after a short delay to ensure DOM is ready
+setTimeout(() => {
+  EthereumStory.initializeWalletButtons();
+}, 100);
+
 // Expose to global scope for debugging
 window.EthereumStory = EthereumStory;
 

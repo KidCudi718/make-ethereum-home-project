@@ -1,12 +1,18 @@
 export function Header() {
   return (
-    <header class="header">
-      <div class="container">
-        <div class="header__content">
-          <a href="/" class="header__brand">
-            <div class="header__logo">E</div>
-            The Complete Ethereum Story
-          </a>
+    <>
+      {/* Skip to main content link for accessibility */}
+      <a href="#main-content" class="skip-link">
+        Skip to main content
+      </a>
+      
+      <header class="header">
+        <div class="container">
+          <div class="header__content">
+            <a href="/" class="header__brand">
+              <div class="header__logo">E</div>
+              The Complete Ethereum Story
+            </a>
           
           <nav class="header__nav" role="navigation" aria-label="Main navigation">
             <ul class="nav-menu">
@@ -57,5 +63,6 @@ export function Header() {
         </div>
       </div>
     </header>
+    </>
   )
 }

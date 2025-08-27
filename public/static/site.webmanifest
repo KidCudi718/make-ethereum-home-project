@@ -1,0 +1,16 @@
+{
+  "name": "The Complete Ethereum Story",
+  "short_name": "Ethereum Story",
+  "description": "A beginner-friendly guide to understanding Ethereum through a cohesive 10-section narrative journey",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#12100B",
+  "theme_color": "#627EEA",
+  "icons": [
+    {
+      "src": "/static/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
